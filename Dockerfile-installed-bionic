@@ -21,15 +21,31 @@ RUN rustup target add wasm32-unknown-unknown --toolchain nightly
 
 COPY . /project
 
+#add rust cache
+#https://stackoverflow.com/a/58474618/13187605
+# RUN echo "fn main() {}" > dummy.rs
+# COPY Cargo.toml .
+# RUN sed -i 's#src/main.rs#dummy.rs#' Cargo.toml
+# RUN cargo build --release
+# RUN sed -i 's#dummy.rs#src/main.rs#' Cargo.toml
+#end rust cache 
+
 WORKDIR /project/
 
 RUN cargo build --release
 
+RUN cargo install cargo-deb
+RUN cargo deb -p node-template
+
 # -------------=== cartp rust docker build ===-------------
 FROM ubuntu:bionic
 
-COPY --from=substrate-node-sim-builder /project/target/release/node-template /
+COPY --from=substrate-node-sim-builder /project/target/debian/node-template_*.deb /tmp
 
-ENV PATH=$PATH:/node-template
+RUN apt-get update \
+ && dpkg -i /tmp/node-template_*.deb || true \
+ && apt-get -f -y install
+
+RUN node-template --help
 
 RUN echo "Executable available using: node-template <OPTIONS>"
