@@ -1,0 +1,35 @@
+
+# docker build -f Dockerfile-installed-bionic -t projetsim/substrate-sim-local .
+
+# -------------=== cartp rust build ===-------------
+FROM ubuntu:bionic as substrate-node-sim-builder
+
+RUN apt-get update \
+ && apt-get install -y \
+ curl \
+ build-essential \
+ llvm \
+ clang
+
+RUN curl https://sh.rustup.rs -sSf | sh -s -- -y 
+
+ENV PATH=$PATH:/root/.cargo/bin
+
+RUN rustup default nightly
+
+RUN rustup target add wasm32-unknown-unknown --toolchain nightly
+
+COPY . /project
+
+WORKDIR /project/
+
+RUN cargo build --release
+
+# -------------=== cartp rust docker build ===-------------
+FROM ubuntu:bionic
+
+COPY --from=substrate-node-sim-builder /project/target/release/node-template /
+
+ENV PATH=$PATH:/node-template
+
+RUN echo "Executable available using: node-template <OPTIONS>"
