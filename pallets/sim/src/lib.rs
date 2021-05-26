@@ -2,7 +2,7 @@
 
 use frame_support::codec::{Decode, Encode};
 use frame_support::{
-	decl_error, decl_event, decl_module, decl_storage, ensure, traits::Get, StorageMap,
+	decl_error, decl_event, decl_module, decl_storage, ensure, StorageMap, weights::Pays
 };
 
 use frame_system::ensure_root;
@@ -94,7 +94,7 @@ decl_module! {
 
 		/// Dispatchable that takes a singles value as a parameter (factory ID), writes the value to
 		/// storage (factories) and emits an event. This function must be dispatched by a signed extrinsic.
-		#[weight = 0]
+		#[weight = (0, Pays::No)]
 		pub fn store_factory(origin, factory_id: <T as frame_system::Config>::AccountId) {
 			ensure_root(origin)?;
 
@@ -113,7 +113,7 @@ decl_module! {
 
 		/// Dispatchable that takes a singles value as a parameter (factory ID), writes the value to
 		/// storage (factories) and emits an event. This function must be dispatched by a signed extrinsic.
-		#[weight = 0]
+		#[weight = (0, Pays::No)]
 		pub fn store_car(origin, car_id: <T as frame_system::Config>::AccountId) {
 			let who = ensure_signed(origin)?;
 
@@ -135,7 +135,7 @@ decl_module! {
 
 		/// Dispatchable that takes a singles value as a parameter (data hash), writes the value to
 		/// storage (crashes) and emits an event. This function must be dispatched by a signed extrinsic.
-		#[weight = 0]
+		#[weight = (0, Pays::No)]
 		fn store_crash(origin, data_hash: Vec<u8>) {
 			let who = ensure_signed(origin)?;
 

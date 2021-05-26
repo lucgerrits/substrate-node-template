@@ -1,6 +1,8 @@
 use sp_core::{Pair, Public, sr25519};
 use node_template_runtime::{
-	AccountId, AuraConfig, BalancesConfig, GenesisConfig, GrandpaConfig,
+	AccountId, AuraConfig, 
+	//BalancesConfig, 
+	GenesisConfig, GrandpaConfig,
 	SudoConfig, SystemConfig, WASM_BINARY, Signature
 };
 use sp_consensus_aura::sr25519::AuthorityId as AuraId;
@@ -139,10 +141,10 @@ fn testnet_genesis(
 			code: wasm_binary.to_vec(),
 			changes_trie_config: Default::default(),
 		}),
-		pallet_balances: Some(BalancesConfig {
-			// Configure endowed accounts with initial balance of 1 << 60.
-			balances: endowed_accounts.iter().cloned().map(|k|(k, 1 << 60)).collect(),
-		}),
+		// pallet_balances: Some(BalancesConfig {
+		// 	// Configure endowed accounts with initial balance of 1 << 60.
+		// 	balances: endowed_accounts.iter().cloned().map(|k|(k, 1 << 60)).collect(),
+		// }),
 		pallet_aura: Some(AuraConfig {
 			authorities: initial_authorities.iter().map(|x| (x.0.clone())).collect(),
 		}),

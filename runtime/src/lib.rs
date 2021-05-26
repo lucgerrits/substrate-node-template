@@ -27,7 +27,7 @@ use sp_version::NativeVersion;
 #[cfg(any(feature = "std", test))]
 pub use sp_runtime::BuildStorage;
 pub use pallet_timestamp::Call as TimestampCall;
-pub use pallet_balances::Call as BalancesCall;
+// pub use pallet_balances::Call as BalancesCall;
 pub use sp_runtime::{Permill, Perbill};
 pub use frame_support::{
 	construct_runtime, parameter_types, StorageValue,
@@ -37,10 +37,10 @@ pub use frame_support::{
 		constants::{BlockExecutionWeight, ExtrinsicBaseWeight, RocksDbWeight, WEIGHT_PER_SECOND},
 	},
 };
-use pallet_transaction_payment::CurrencyAdapter;
+// use pallet_transaction_payment::CurrencyAdapter;
 
 /// Import the template pallet.
-pub use pallet_template;
+// pub use pallet_template;
 
 /// An index to a block.
 pub type BlockNumber = u32;
@@ -57,7 +57,7 @@ pub type AccountId = <<Signature as Verify>::Signer as IdentifyAccount>::Account
 pub type AccountIndex = u32;
 
 /// Balance of an account.
-pub type Balance = u128;
+// pub type Balance = u128;
 
 /// Index of a transaction in the chain.
 pub type Index = u32;
@@ -190,7 +190,8 @@ impl frame_system::Config for Runtime {
 	/// What to do if an account is fully reaped from the system.
 	type OnKilledAccount = ();
 	/// The data to be stored in an account.
-	type AccountData = pallet_balances::AccountData<Balance>;
+	// type AccountData = pallet_balances::AccountData<Balance>;
+	type AccountData = ();
 	/// Weight information for the extrinsics of this pallet.
 	type SystemWeightInfo = ();
 	/// This is used as an identifier of the chain. 42 is the generic substrate prefix.
@@ -232,33 +233,33 @@ impl pallet_timestamp::Config for Runtime {
 	type WeightInfo = ();
 }
 
-parameter_types! {
-	pub const ExistentialDeposit: u128 = 500;
-	pub const MaxLocks: u32 = 50;
-}
+// parameter_types! {
+// 	pub const ExistentialDeposit: u128 = 500;
+// 	pub const MaxLocks: u32 = 50;
+// }
 
-impl pallet_balances::Config for Runtime {
-	type MaxLocks = MaxLocks;
-	/// The type for recording an account's balance.
-	type Balance = Balance;
-	/// The ubiquitous event type.
-	type Event = Event;
-	type DustRemoval = ();
-	type ExistentialDeposit = ExistentialDeposit;
-	type AccountStore = System;
-	type WeightInfo = pallet_balances::weights::SubstrateWeight<Runtime>;
-}
+// impl pallet_balances::Config for Runtime {
+// 	//type MaxLocks = MaxLocks;
+// 	/// The type for recording an account's balance.
+// 	type Balance = Balance;
+// 	/// The ubiquitous event type.
+// 	type Event = Event;
+// 	type DustRemoval = ();
+// 	type ExistentialDeposit = ExistentialDeposit;
+// 	type AccountStore = System;
+// 	type WeightInfo = pallet_balances::weights::SubstrateWeight<Runtime>;
+// }
 
-parameter_types! {
-	pub const TransactionByteFee: Balance = 1;
-}
+// parameter_types! {
+// 	pub const TransactionByteFee: Balance = 0;
+// }
 
-impl pallet_transaction_payment::Config for Runtime {
-	type OnChargeTransaction = CurrencyAdapter<Balances, ()>;
-	type TransactionByteFee = TransactionByteFee;
-	type WeightToFee = IdentityFee<Balance>;
-	type FeeMultiplierUpdate = ();
-}
+// impl pallet_transaction_payment::Config for Runtime {
+// 	type OnChargeTransaction = CurrencyAdapter<Balances, ()>;
+// 	type TransactionByteFee = TransactionByteFee;
+// 	type WeightToFee = IdentityFee<Balance>;
+// 	type FeeMultiplierUpdate = ();
+// }
 
 impl pallet_sudo::Config for Runtime {
 	type Event = Event;
@@ -266,9 +267,9 @@ impl pallet_sudo::Config for Runtime {
 }
 
 /// Configure the pallet-template in pallets/template.
-impl pallet_template::Config for Runtime {
-	type Event = Event;
-}
+// impl pallet_template::Config for Runtime {
+// 	type Event = Event;
+// }
 
 impl pallet_sim::Config for Runtime {
 	type Event = Event;
@@ -286,11 +287,11 @@ construct_runtime!(
 		Timestamp: pallet_timestamp::{Module, Call, Storage, Inherent},
 		Aura: pallet_aura::{Module, Config<T>},
 		Grandpa: pallet_grandpa::{Module, Call, Storage, Config, Event},
-		Balances: pallet_balances::{Module, Call, Storage, Config<T>, Event<T>},
-		TransactionPayment: pallet_transaction_payment::{Module, Storage},
+		//Balances: pallet_balances::{Module, Call, Storage, Config<T>, Event<T>},
+		// TransactionPayment: pallet_transaction_payment::{Module, Storage},
 		Sudo: pallet_sudo::{Module, Call, Config<T>, Storage, Event<T>},
 		// Include the custom logic from the pallet-template in the runtime.
-		TemplateModule: pallet_template::{Module, Call, Storage, Event<T>},
+		// TemplateModule: pallet_template::{Module, Call, Storage, Event<T>},
 		SimModule: pallet_sim::{Module, Call, Storage, Event<T>},
 	}
 );
@@ -313,7 +314,7 @@ pub type SignedExtra = (
 	frame_system::CheckEra<Runtime>,
 	frame_system::CheckNonce<Runtime>,
 	frame_system::CheckWeight<Runtime>,
-	pallet_transaction_payment::ChargeTransactionPayment<Runtime>
+	// pallet_transaction_payment::ChargeTransactionPayment<Runtime>
 );
 /// Unchecked extrinsic type as expected by this runtime.
 pub type UncheckedExtrinsic = generic::UncheckedExtrinsic<Address, Call, Signature, SignedExtra>;
@@ -443,20 +444,20 @@ impl_runtime_apis! {
 		}
 	}
 
-	impl pallet_transaction_payment_rpc_runtime_api::TransactionPaymentApi<Block, Balance> for Runtime {
-		fn query_info(
-			uxt: <Block as BlockT>::Extrinsic,
-			len: u32,
-		) -> pallet_transaction_payment_rpc_runtime_api::RuntimeDispatchInfo<Balance> {
-			TransactionPayment::query_info(uxt, len)
-		}
-		fn query_fee_details(
-			uxt: <Block as BlockT>::Extrinsic,
-			len: u32,
-		) -> pallet_transaction_payment::FeeDetails<Balance> {
-			TransactionPayment::query_fee_details(uxt, len)
-		}
-	}
+	// impl pallet_transaction_payment_rpc_runtime_api::TransactionPaymentApi<Block, Balance> for Runtime {
+	// 	fn query_info(
+	// 		uxt: <Block as BlockT>::Extrinsic,
+	// 		len: u32,
+	// 	) -> pallet_transaction_payment_rpc_runtime_api::RuntimeDispatchInfo<Balance> {
+	// 		TransactionPayment::query_info(uxt, len)
+	// 	}
+	// 	fn query_fee_details(
+	// 		uxt: <Block as BlockT>::Extrinsic,
+	// 		len: u32,
+	// 	) -> pallet_transaction_payment::FeeDetails<Balance> {
+	// 		TransactionPayment::query_fee_details(uxt, len)
+	// 	}
+	// }
 
 	#[cfg(feature = "runtime-benchmarks")]
 	impl frame_benchmarking::Benchmark<Block> for Runtime {
@@ -485,9 +486,9 @@ impl_runtime_apis! {
 			let params = (&config, &whitelist);
 
 			add_benchmark!(params, batches, frame_system, SystemBench::<Runtime>);
-			add_benchmark!(params, batches, pallet_balances, Balances);
+			//add_benchmark!(params, batches, pallet_balances, Balances);
 			add_benchmark!(params, batches, pallet_timestamp, Timestamp);
-			add_benchmark!(params, batches, pallet_template, TemplateModule);
+			// add_benchmark!(params, batches, pallet_template, TemplateModule);
 
 			if batches.is_empty() { return Err("Benchmark not found for this pallet.".into()) }
 			Ok(batches)
