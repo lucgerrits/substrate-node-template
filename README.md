@@ -1,3 +1,9 @@
+**Note**: Modified for personal use.
+
+Changes:
+- Remove balance.
+- Remove template pallet
+
 # Substrate Node Template
 
 A fresh FRAME-based [Substrate](https://www.substrate.io/) node, ready for hacking :rocket:
