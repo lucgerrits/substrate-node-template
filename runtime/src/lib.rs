@@ -142,7 +142,7 @@ parameter_types! {
 	pub BlockWeights: frame_system::limits::BlockWeights = frame_system::limits::BlockWeights
 		::with_sensible_defaults(2 * WEIGHT_PER_SECOND, NORMAL_DISPATCH_RATIO);
 	pub BlockLength: frame_system::limits::BlockLength = frame_system::limits::BlockLength
-		::max_with_normal_ratio(5 * 1024 * 1024, NORMAL_DISPATCH_RATIO);
+		::max_with_normal_ratio(50 * 1024 * 1024, NORMAL_DISPATCH_RATIO); //if use 5 we have 5MB
 	pub const SS58Prefix: u8 = 42;
 }
 
