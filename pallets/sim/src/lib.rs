@@ -136,7 +136,7 @@ decl_module! {
 		/// Dispatchable that takes a singles value as a parameter (data hash), writes the value to
 		/// storage (crashes) and emits an event. This function must be dispatched by a signed extrinsic.
 		#[weight = (0, Pays::No)]
-		fn store_crash(origin, data_hash: Vec<u8>) {
+		pub fn store_crash(origin, data_hash: Vec<u8>) {
 			let who = ensure_signed(origin)?;
 
 			// Verify that the specified car_id has not already been stored.
