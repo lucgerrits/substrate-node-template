@@ -250,7 +250,7 @@ impl pallet_balances::Config for Runtime {
 }
 
 parameter_types! {
-	pub const TransactionByteFee: Balance = 1;
+	pub const TransactionByteFee: Balance = 0;
 }
 
 impl pallet_transaction_payment::Config for Runtime {
@@ -270,6 +270,9 @@ impl pallet_template::Config for Runtime {
 	type Event = Event;
 }
 
+impl pallet_sim::Config for Runtime {
+	type Event = Event;
+}
 // Create the runtime by composing the FRAME pallets that were previously configured.
 construct_runtime!(
 	pub enum Runtime where
@@ -287,6 +290,7 @@ construct_runtime!(
 		Sudo: pallet_sudo::{Pallet, Call, Config<T>, Storage, Event<T>},
 		// Include the custom logic from the pallet-template in the runtime.
 		TemplateModule: pallet_template::{Pallet, Call, Storage, Event<T>},
+		SimModule: pallet_sim::{Pallet, Call, Storage, Event<T>},
 	}
 );
 
