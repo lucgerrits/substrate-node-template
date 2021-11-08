@@ -17,7 +17,7 @@ It stores data given by any registered vehicle.
 ## TODO
 
 - [x] store factory id
-- [ ] store car id
-- [ ] store car accident
+- [x] store car id
+- [x] store car accident
 
 License: Unlicense
